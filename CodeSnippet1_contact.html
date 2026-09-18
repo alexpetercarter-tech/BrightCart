@@ -16,19 +16,12 @@
     .card p.lead { color: #52606d; font-size: 14px; margin-bottom: 16px; }
     label { display: block; font-size: 14px; margin: 12px 0 6px; font-weight: bold; }
     input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd2d9; border-radius: 6px; font-size: 14px; }
-    input.error, select.error, textarea.error { border-color: #d64545; background: #fff5f5; }
     textarea { min-height: 90px; resize: vertical; }
-    .field-error { color: #d64545; font-size: 12px; margin-top: 4px; display: none; }
-    .field-error.show { display: block; }
     .row { display: flex; align-items: center; margin-top: 14px; }
     .row input { width: auto; margin-right: 8px; }
     .row label { margin: 0; font-weight: normal; }
     .btn { margin-top: 18px; background: #2f7d32; color: #fff;
            border: none; padding: 12px 28px; border-radius: 6px; cursor: pointer; font-size: 15px; }
-    .btn:disabled { background: #8fae8f; cursor: not-allowed; }
-    .form-message { margin-top: 16px; padding: 12px 14px; border-radius: 6px; font-size: 14px; display: none; }
-    .form-message.success { display: block; background: #e7f6e7; color: #1d5e20; border: 1px solid #b7dfb8; }
-    .form-message.error { display: block; background: #fdecec; color: #9a2a2a; border: 1px solid #f3b7b7; }
   </style>
 </head>
 <body>
@@ -39,114 +32,23 @@
   <section class="card">
     <h2>Contact Us</h2>
     <p class="lead">Send us a message and we will reply within one business day.</p>
-
-    <form id="contactForm" novalidate>
-      <label for="name">Full Name</label>
-      <input type="text" id="name" placeholder="Enter your full name">
-      <div class="field-error" id="nameError">Please enter your full name.</div>
-
-      <label for="email">Email Address</label>
-      <input type="email" id="email" placeholder="you@example.com">
-      <div class="field-error" id="emailError">Please enter a valid email address.</div>
-
-      <label for="subject">Subject</label>
-      <select id="subject">
-        <option value="">-- Select a subject --</option>
-        <option>General question</option>
-        <option>Order support</option>
-        <option>Feedback</option>
-      </select>
-      <div class="field-error" id="subjectError">Please choose a subject.</div>
-
-      <label for="message">Message</label>
-      <textarea id="message" placeholder="How can we help?"></textarea>
-      <div class="field-error" id="messageError">Please enter a message (at least 10 characters).</div>
-
-      <div class="row">
-        <input type="checkbox" id="subscribe">
-        <label for="subscribe">Send me product news by email</label>
-      </div>
-
-      <button type="submit" class="btn" id="submitBtn">Send Message</button>
-
-      <div class="form-message" id="formMessage"></div>
-    </form>
+    <label for="name">Full Name</label>
+    <input type="text" id="name" placeholder="Enter your full name">
+    <label for="email">Email Address</label>
+    <input type="email" id="email" placeholder="you@example.com">
+    <label for="subject">Subject</label>
+    <select id="subject">
+      <option>General question</option>
+      <option>Order support</option>
+      <option>Feedback</option>
+    </select>
+    <label for="message">Message</label>
+    <textarea id="message" placeholder="How can we help?"></textarea>
+    <div class="row">
+      <input type="checkbox" id="subscribe">
+      <label for="subscribe">Send me product news by email</label>
+    </div>
+    <button class="btn">Send Message</button>
   </section>
-
-  <script>
-    const form = document.getElementById('contactForm');
-    const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
-    const subjectInput = document.getElementById('subject');
-    const messageInput = document.getElementById('message');
-    const submitBtn = document.getElementById('submitBtn');
-    const formMessage = document.getElementById('formMessage');
-
-    function setFieldError(input, errorEl, show) {
-      input.classList.toggle('error', show);
-      errorEl.classList.toggle('show', show);
-    }
-
-    function isValidEmail(value) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    }
-
-    function validateForm() {
-      let valid = true;
-
-      const nameOk = nameInput.value.trim().length > 0;
-      setFieldError(nameInput, document.getElementById('nameError'), !nameOk);
-      if (!nameOk) valid = false;
-
-      const emailOk = isValidEmail(emailInput.value.trim());
-      setFieldError(emailInput, document.getElementById('emailError'), !emailOk);
-      if (!emailOk) valid = false;
-
-      const subjectOk = subjectInput.value.trim().length > 0;
-      setFieldError(subjectInput, document.getElementById('subjectError'), !subjectOk);
-      if (!subjectOk) valid = false;
-
-      const messageOk = messageInput.value.trim().length >= 10;
-      setFieldError(messageInput, document.getElementById('messageError'), !messageOk);
-      if (!messageOk) valid = false;
-
-      return valid;
-    }
-
-    // Live validation as the user types/selects (clears error once fixed)
-    [nameInput, emailInput, subjectInput, messageInput].forEach(el => {
-      el.addEventListener('input', () => {
-        if (formMessage.classList.contains('error') || formMessage.classList.contains('success')) {
-          formMessage.className = 'form-message';
-          formMessage.textContent = '';
-        }
-        validateForm();
-      });
-    });
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const isValid = validateForm();
-
-      if (!isValid) {
-        formMessage.className = 'form-message error';
-        formMessage.textContent = 'Please fix the highlighted fields before submitting.';
-        return;
-      }
-
-      // Simulate submission (disable button, show loading, then success)
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-
-      setTimeout(() => {
-        formMessage.className = 'form-message success';
-        formMessage.textContent = 'Thanks! Your message has been sent — we will reply within one business day.';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-        form.reset();
-      }, 800);
-    });
-  </script>
 </body>
 </html>
